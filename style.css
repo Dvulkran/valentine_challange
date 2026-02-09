@@ -1,0 +1,424 @@
+@import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Nunito', sans-serif;
+    background: #1a1a2e;
+    color: white;
+    overflow: hidden;
+    position: relative;
+    min-height: 100vh;
+}
+
+#bgCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+}
+
+#game-container {
+    position: relative;
+    z-index: 10;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.level {
+    display: none;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 30px;
+    padding: 40px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    animation: slideIn 0.5s ease;
+}
+
+.level.active {
+    display: block;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(50px) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+h2 {
+    font-family: 'Fredoka One', cursive;
+    font-size: 2.5rem;
+    text-align: center;
+    margin-bottom: 20px;
+    background: linear-gradient(45deg, #ff6b9d, #c44569, #ff9ff3);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 0 30px rgba(255, 107, 157, 0.5);
+}
+
+.instruction {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #dfe6e9;
+    margin-bottom: 30px;
+}
+
+/* Level 1: Scramble Words */
+.scramble-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    margin: 30px 0;
+}
+
+.scramble-word {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 15px 25px;
+    border-radius: 15px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+    animation: float 3s ease-in-out infinite;
+}
+
+.scramble-word:hover {
+    transform: translateY(-5px) rotate(5deg);
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.6);
+}
+
+.scramble-word.solved {
+    background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+    animation: pulse 1s infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+#decode-input {
+    width: 100%;
+    padding: 15px;
+    font-size: 1.2rem;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-radius: 50px;
+    background: rgba(255,255,255,0.1);
+    color: white;
+    text-align: center;
+    margin: 20px 0;
+    outline: none;
+    transition: all 0.3s;
+}
+
+#decode-input:focus {
+    border-color: #ff6b9d;
+    box-shadow: 0 0 20px rgba(255, 107, 157, 0.5);
+}
+
+.hint {
+    text-align: center;
+    color: #74b9ff;
+    font-size: 0.9rem;
+    margin-top: 10px;
+}
+
+.game-btn {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    font-size: 1.3rem;
+    font-family: 'Fredoka One', cursive;
+    background: linear-gradient(45deg, #ff6b9d, #ff8fab);
+    border: none;
+    border-radius: 50px;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 5px 20px rgba(255, 107, 157, 0.4);
+    margin-top: 20px;
+}
+
+.game-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(255, 107, 157, 0.6);
+}
+
+/* Level 2: Maze */
+#maze-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+#mazeCanvas {
+    background: rgba(0,0,0,0.3);
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+#maze-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.middle-arrows {
+    display: flex;
+    gap: 40px;
+}
+
+.arrow-btn {
+    width: 60px;
+    height: 60px;
+    font-size: 1.5rem;
+    background: rgba(255,255,255,0.2);
+    border: 2px solid rgba(255,255,255,0.3);
+    border-radius: 15px;
+    color: white;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.arrow-btn:hover {
+    background: #ff6b9d;
+    transform: scale(1.1);
+}
+
+.arrow-btn:active {
+    transform: scale(0.95);
+}
+
+/* Level 3: Memory Game */
+#memory-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.memory-card {
+    aspect-ratio: 1;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    transform-style: preserve-3d;
+}
+
+.memory-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+}
+
+.memory-card.flipped {
+    background: white;
+    transform: rotateY(180deg);
+}
+
+.memory-card.matched {
+    background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+    animation: matchPulse 0.5s;
+    pointer-events: none;
+}
+
+@keyframes matchPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+}
+
+/* Level 4: The Impossible Choice */
+.choice-container {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    align-items: center;
+    margin-top: 50px;
+    position: relative;
+    height: 400px;
+}
+
+.final-btn {
+    padding: 20px 50px;
+    font-size: 1.5rem;
+    font-family: 'Fredoka One', cursive;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s;
+    position: relative;
+}
+
+.yes-btn {
+    background: linear-gradient(45deg, #00b894, #00cec9);
+    color: white;
+    box-shadow: 0 10px 30px rgba(0, 184, 148, 0.4);
+    animation: heartbeat 1.5s infinite;
+    z-index: 10;
+}
+
+.yes-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 15px 40px rgba(0, 184, 148, 0.6);
+}
+
+.no-btn {
+    background: linear-gradient(45deg, #636e72, #b2bec3);
+    color: white;
+    position: absolute;
+    transition: all 0.2s ease-out;
+    z-index: 20;
+}
+
+#caught-counter {
+    text-align: center;
+    margin-top: 20px;
+    color: #fdcb6e;
+    font-weight: bold;
+}
+
+/* Victory Screen */
+#victory {
+    text-align: center;
+    background: linear-gradient(135deg, rgba(255,107,157,0.2) 0%, rgba(196,69,105,0.2) 100%);
+}
+
+.victory-content h1 {
+    font-family: 'Fredoka One', cursive;
+    font-size: 3.5rem;
+    background: linear-gradient(45deg, #ffd700, #ff6b9d, #ff8fab);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: titlePop 1s ease;
+    margin-bottom: 30px;
+}
+
+@keyframes titlePop {
+    0% { transform: scale(0) rotate(-180deg); }
+    100% { transform: scale(1) rotate(0); }
+}
+
+.big-heart {
+    font-size: 10rem;
+    animation: heartbeat 1s infinite, glow 2s infinite alternate;
+    display: inline-block;
+    margin: 20px 0;
+    filter: drop-shadow(0 0 30px rgba(255, 107, 157, 0.8));
+}
+
+@keyframes heartbeat {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+}
+
+@keyframes glow {
+    from { filter: drop-shadow(0 0 30px rgba(255, 107, 157, 0.8)); }
+    to { filter: drop-shadow(0 0 60px rgba(255, 107, 157, 1)); }
+}
+
+#fireworks-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* Progress Bar */
+#progress-container {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 300px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 50px;
+    padding: 5px;
+    backdrop-filter: blur(10px);
+}
+
+#progress-bar {
+    height: 20px;
+    background: linear-gradient(90deg, #ff6b9d, #c44569);
+    border-radius: 50px;
+    width: 25%;
+    transition: width 0.5s ease;
+    box-shadow: 0 0 20px rgba(255, 107, 157, 0.5);
+}
+
+#progress-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: white;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    h2 { font-size: 1.8rem; }
+    .scramble-word { font-size: 1.1rem; padding: 10px 15px; }
+    #memory-grid { grid-template-columns: repeat(3, 1fr); }
+    .victory-content h1 { font-size: 2.2rem; }
+    .big-heart { font-size: 6rem; }
+}
+
+/* Shake animation for wrong answers */
+.shake {
+    animation: shake 0.5s;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-10px); }
+    75% { transform: translateX(10px); }
+}
+
+/* Particle effects */
+.particle {
+    position: absolute;
+    pointer-events: none;
+    border-radius: 50%;
+    animation: particleFloat 1s ease-out forwards;
+}
+
+@keyframes particleFloat {
+    to {
+        transform: translateY(-100px) scale(0);
+        opacity: 0;
+    }
+}

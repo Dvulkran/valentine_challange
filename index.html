@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valentine's Challenge ❤️</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Background Canvas -->
+    <canvas id="bgCanvas"></canvas>
+    
+    <!-- Game Container -->
+    <div id="game-container">
+        
+        <!-- LEVEL 1: Decode the Message -->
+        <div class="level active" id="level-1">
+            <h2>Level 1: Decode My Heart 💝</h2>
+            <p class="instruction">Unscramble these words to reveal the message:</p>
+            <div class="scramble-container">
+                <div class="scramble-word" data-word="VALENTINE" data-scrambled="NITLEVAE">NITLEVAE</div>
+                <div class="scramble-word" data-word="WILL" data-scrambled="LIWL">LIWL</div>
+                <div class="scramble-word" data-word="YOU" data-scrambled="OUY">OUY</div>
+                <div class="scramble-word" data-word="BE" data-scrambled="EB">EB</div>
+                <div class="scramble-word" data-word="MINE" data-scrambled="NIME">NIME</div>
+            </div>
+            <input type="text" id="decode-input" placeholder="Type the decoded message here..." autocomplete="off">
+            <button class="game-btn" onclick="checkDecode()">Submit 💌</button>
+            <p class="hint">Hint: Click the scrambled words for clues!</p>
+        </div>
+
+        <!-- LEVEL 2: Heart Maze -->
+        <div class="level" id="level-2">
+            <h2>Level 2: Navigate My Heart 🧭</h2>
+            <p class="instruction">Use arrow keys to guide the heart through the maze to the target!</p>
+            <div id="maze-container">
+                <canvas id="mazeCanvas" width="400" height="400"></canvas>
+                <div id="maze-controls">
+                    <button class="arrow-btn" onclick="movePlayer('up')">⬆️</button>
+                    <div class="middle-arrows">
+                        <button class="arrow-btn" onclick="movePlayer('left')">⬅️</button>
+                        <button class="arrow-btn" onclick="movePlayer('right')">➡️</button>
+                    </div>
+                    <button class="arrow-btn" onclick="movePlayer('down')">⬇️</button>
+                </div>
+            </div>
+            <p id="maze-status">Find the 💕!</p>
+        </div>
+
+        <!-- LEVEL 3: Memory Match -->
+        <div class="level" id="level-3">
+            <h2>Level 3: Match Our Memories 🧠</h2>
+            <p class="instruction">Find all matching pairs to proceed!</p>
+            <div id="memory-grid"></div>
+            <p id="memory-status">Matches: <span id="matches">0</span>/6</p>
+        </div>
+
+        <!-- LEVEL 4: The Final Challenge -->
+        <div class="level" id="level-4">
+            <h2>Final Challenge: The Choice 💘</h2>
+            <p class="instruction">You made it! Now... will you accept my heart?</p>
+            <div class="choice-container">
+                <button id="yes-btn" class="final-btn yes-btn">YES! I WILL! 💍❤️</button>
+                <button id="no-btn" class="final-btn no-btn">No thanks 👋</button>
+            </div>
+            <div id="caught-counter">Times tried to catch No: <span>0</span></div>
+        </div>
+
+        <!-- VICTORY SCREEN -->
+        <div class="level" id="victory">
+            <div class="victory-content">
+                <h1>SHE SAID YES! 🎉💕</h1>
+                <div class="big-heart">❤️</div>
+                <p>You've unlocked my heart forever!</p>
+                <div id="fireworks-container"></div>
+                <button class="game-btn" onclick="location.reload()">Play Again 🔄</button>
+            </div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div id="progress-container">
+            <div id="progress-bar"></div>
+            <span id="progress-text">Level 1/4</span>
+        </div>
+    </div>
+
+    <!-- Audio Elements -->
+    <audio id="pop-sound" preload="auto">
+        <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIG2m98OScTgwOUarm7blmFgU7k9n1unEiBC13yO/eizEIHWq+8+OWT" type="audio/wav">
+    </audio>
+
+    <script src="script.js"></script>
+</body>
+</html>
