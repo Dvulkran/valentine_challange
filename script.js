@@ -383,20 +383,53 @@ function createParticles(element) {
 }
 
 // ==================== VICTORY ====================
+let fireworkIntervals = [];
+const FIREWORKS_MIN_WIDTH = 700; // pixels - disable fireworks below this width
+
 function showVictory() {
     document.getElementById('level-4').classList.remove('active');
     document.getElementById('victory').classList.add('active');
     document.getElementById('progress-bar').style.width = '100%';
     document.getElementById('progress-text').textContent = 'COMPLETE! ❤️';
-    
-    // Epic fireworks
-    setInterval(createFirework, 300);
-    setInterval(createFirework, 500);
-    setInterval(createFirework, 700);
+
+    // If screen is small, do not run fireworks to avoid performance issues
+    if (window.innerWidth < FIREWORKS_MIN_WIDTH) {
+        const container = document.getElementById('fireworks-container');
+        if (container) container.innerHTML = ''; // ensure no leftover elements
+        return;
+    }
+
+    // Clear any existing intervals
+    fireworkIntervals.forEach(id => clearInterval(id));
+    fireworkIntervals = [];
+
+    // Epic fireworks - limited duration (8 seconds)
+    fireworkIntervals.push(setInterval(createFirework, 300));
+    fireworkIntervals.push(setInterval(createFirework, 500));
+    fireworkIntervals.push(setInterval(createFirework, 700));
+
+    // Stop fireworks after 8 seconds
+    setTimeout(() => {
+        fireworkIntervals.forEach(id => clearInterval(id));
+        fireworkIntervals = [];
+        // Clean up any remaining particles after delay
+        setTimeout(() => {
+            const container = document.getElementById('fireworks-container');
+            if (container) {
+                container.innerHTML = '';
+            }
+        }, 1500);
+    }, 8000);
 }
 
 function createFirework() {
     const container = document.getElementById('fireworks-container');
+    if (!container) return;
+    
+    // Limit total particles to prevent lag
+    const currentParticles = container.querySelectorAll('div').length;
+    if (currentParticles > 200) return;
+    
     const firework = document.createElement('div');
     firework.style.position = 'absolute';
     firework.style.left = Math.random() * 100 + '%';
@@ -406,11 +439,13 @@ function createFirework() {
     firework.style.borderRadius = '50%';
     firework.style.background = `hsl(${Math.random() * 60 + 330}, 100%, 70%)`;
     firework.style.boxShadow = '0 0 10px currentColor';
+    firework.style.pointerEvents = 'none';
     
     container.appendChild(firework);
     
-    // Explode
-    for (let i = 0; i < 20; i++) {
+    // Explode with reduced particles for better performance
+    const particleCount = 15; // Reduced from 20
+    for (let i = 0; i < particleCount; i++) {
         const particle = document.createElement('div');
         particle.style.position = 'absolute';
         particle.style.left = firework.style.left;
@@ -419,20 +454,38 @@ function createFirework() {
         particle.style.height = '4px';
         particle.style.borderRadius = '50%';
         particle.style.background = firework.style.background;
-        particle.style.transition = 'all 1s ease-out';
+        particle.style.pointerEvents = 'none';
+        particle.style.transform = 'translate(0, 0)';
+        particle.style.opacity = '1';
+        
         container.appendChild(particle);
         
-        setTimeout(() => {
-            const angle = (Math.PI * 2 * i) / 20;
-            const velocity = 100 + Math.random() * 100;
-            particle.style.transform = `translate(${Math.cos(angle) * velocity}px, ${Math.sin(angle) * velocity}px)`;
-            particle.style.opacity = '0';
-        }, 10);
+        // Use requestAnimationFrame for smoother animation
+        const startTime = Date.now();
+        const duration = 800; // Reduced from 1000ms for faster cleanup
         
-        setTimeout(() => particle.remove(), 1000);
+        const animate = () => {
+            const elapsed = Date.now() - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            
+            const angle = (Math.PI * 2 * i) / particleCount;
+            const velocity = 80 + Math.random() * 80;
+            const distance = velocity * progress;
+            
+            particle.style.transform = `translate(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance}px)`;
+            particle.style.opacity = Math.max(0, 1 - progress);
+            
+            if (progress < 1) {
+                requestAnimationFrame(animate);
+            } else {
+                particle.remove();
+            }
+        };
+        
+        requestAnimationFrame(animate);
     }
     
-    setTimeout(() => firework.remove(), 1000);
+    setTimeout(() => firework.remove(), 800);
 }
 
 // Add some easter eggs
