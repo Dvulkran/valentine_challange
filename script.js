@@ -127,19 +127,31 @@ const mazeLayout = [
     [1,0,1,1,1,1,1,1,0,1],
     [1,1,1,1,1,1,1,1,1,1]
 ];
-const cellSize = 40;
+
+let cellSize = 40;
 let playerPos = {x: 1, y: 1};
 let targetPos = {x: 8, y: 8};
 
 function initMaze() {
     const mazeCanvas = document.getElementById('mazeCanvas');
+    const container = document.getElementById('maze-container');
+    
+    // Responsive canvas sizing
+    const maxWidth = Math.min(container.offsetWidth - 30, 400);
+    cellSize = Math.floor(maxWidth / 10);
+    const newSize = cellSize * 10;
+    
+    mazeCanvas.width = newSize;
+    mazeCanvas.height = newSize;
+    
     const mctx = mazeCanvas.getContext('2d');
     drawMaze(mctx);
 }
 
 function drawMaze(mctx) {
+    const canvasSize = cellSize * 10;
     mctx.fillStyle = '#2d3436';
-    mctx.fillRect(0, 0, 400, 400);
+    mctx.fillRect(0, 0, canvasSize, canvasSize);
     
     for (let y = 0; y < 10; y++) {
         for (let x = 0; x < 10; x++) {
@@ -158,14 +170,14 @@ function drawMaze(mctx) {
     // Draw player
     mctx.fillStyle = '#ff6b9d';
     mctx.beginPath();
-    mctx.arc(playerPos.x * cellSize + cellSize/2, playerPos.y * cellSize + cellSize/2, 15, 0, Math.PI * 2);
+    mctx.arc(playerPos.x * cellSize + cellSize/2, playerPos.y * cellSize + cellSize/2, cellSize/2.5, 0, Math.PI * 2);
     mctx.fill();
     mctx.shadowBlur = 20;
     mctx.shadowColor = '#ff6b9d';
     
     // Draw target
-    mctx.font = '30px Arial';
-    mctx.fillText('💕', targetPos.x * cellSize + 5, targetPos.y * cellSize + 30);
+    mctx.font = `${cellSize * 0.75}px Arial`;
+    mctx.fillText('💕', targetPos.x * cellSize + cellSize * 0.15, targetPos.y * cellSize + cellSize * 0.75);
     mctx.shadowBlur = 0;
 }
 
