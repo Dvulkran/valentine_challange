@@ -327,34 +327,33 @@ function moveNoButton() {
 function teleportButton() {
     const noBtn = document.getElementById('no-btn');
     const container = document.querySelector('.choice-container');
+    const yesBtn = document.getElementById('yes-btn');
     const rect = container.getBoundingClientRect();
+    const yesRect = yesBtn.getBoundingClientRect();
+    const containerRect = container.getBoundingClientRect();
     
-    // Random position within container but away from Yes button
-    const maxX = rect.width - noBtn.offsetWidth - 20;
+    // Position No button below Yes button with spacing
+    const yesBottomPos = yesRect.bottom - containerRect.top;
+    const minY = yesBottomPos + 40; // 40px spacing below Yes button
     const maxY = rect.height - noBtn.offsetHeight - 20;
     
-    let newX, newY, safeDistance;
-    let attempts = 0;
-    
-    do {
-        newX = Math.random() * maxX;
-        newY = Math.random() * maxY;
+    // Only teleport if there's space below
+    if (minY >= maxY) {
+        // If no space, stay at bottom
+        noBtn.style.bottom = '0px';
+        noBtn.style.left = '50%';
+        noBtn.style.transform = 'translateX(-50%)';
+    } else {
+        // Random Y position below Yes button
+        const newY = minY + Math.random() * (maxY - minY);
+        const maxX = rect.width - noBtn.offsetWidth - 20;
+        const newX = Math.random() * maxX;
         
-        // Calculate distance from Yes button (center top)
-        const yesBtn = document.getElementById('yes-btn');
-        const yesRect = yesBtn.getBoundingClientRect();
-        const containerRect = container.getBoundingClientRect();
-        const yesX = yesRect.left - containerRect.left + yesRect.width/2;
-        const yesY = yesRect.top - containerRect.top + yesRect.height/2;
-        
-        const distToYes = Math.hypot(newX - yesX + 50, newY - yesY);
-        safeDistance = distToYes > 100;
-        attempts++;
-    } while (!safeDistance && attempts < 50);
-    
-    noBtn.style.left = newX + 'px';
-    noBtn.style.top = newY + 'px';
-    noBtn.style.transform = `rotate(${Math.random() * 360}deg) scale(${0.8 + Math.random() * 0.4})`;
+        noBtn.style.left = newX + 'px';
+        noBtn.style.top = newY + 'px';
+        noBtn.style.bottom = 'auto';
+        noBtn.style.transform = `rotate(${Math.random() * 360}deg) scale(${0.8 + Math.random() * 0.4})`;
+    }
     
     noClicks++;
     document.querySelector('#caught-counter span').textContent = noClicks;
