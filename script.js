@@ -101,9 +101,9 @@ scrambledWords.forEach(word => {
 
 function checkDecode() {
     const input = document.getElementById('decode-input').value.toUpperCase().trim();
-    const correct = "VALENTINE WILL YOU BE MINE";
-    
-    if (input === correct || input === "WILL YOU BE MY VALENTINE") {
+    const correct = "WILL YOU BE MY VALENTINE";
+
+    if (input === correct) {
         createParticles(document.getElementById('decode-input'));
         setTimeout(nextLevel, 1000);
     } else {
@@ -490,4 +490,4 @@ function createFirework() {
 
 // Add some easter eggs
 console.log('%c❤️ Happy Valentine\'s Day! ❤️', 'font-size: 30px; color: #ff6b9d; font-weight: bold;');
-console.log('%cThe answer is: VALENTINE WILL YOU BE MINE', 'font-size: 14px; color: #636e72;');
+console.log('%cThe answer is: WILL YOU BE MY VALENTINE', 'font-size: 14px; color: #636e72;');
